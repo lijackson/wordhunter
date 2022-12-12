@@ -5,128 +5,11 @@
 #include <string>
 #include <vector>
 #include <stack>
-#include <bits/stdc++.h>
+#include <algorithm>
 #include <chrono>
 
-class TrieNode {
-  public:
-    std::unordered_map<char, TrieNode*> letters;
-    TrieNode* parent;
-    char val;
-    bool end;
-
-    static void add_word(TrieNode* head, std::string word) {
-        for (char c : word) {
-            if (!head->letters.count(c))
-                head->letters[c] = new TrieNode(head, c);
-            head = head->letters[c];
-        }
-        head->end = true;
-    }
-
-    static std::string recreate(TrieNode* t) {
-        std::string ans;
-        while (t->parent != NULL) {
-            ans += t->val;
-            t = t->parent;
-        }
-        std::reverse(ans.begin(), ans.end());
-        return ans;
-    }
-
-    TrieNode* get(char c) {
-        if (!letters.count(c))
-            return NULL;
-        return letters[c];
-    }
-
-    TrieNode(TrieNode* p, char c) {
-        end = false;
-        parent = p;
-        val = c;
-    }
-
-    TrieNode() {
-        end = false;
-        parent = NULL;
-        val = '~';
-    }
-
-    ~TrieNode() {
-        for (const auto &item : letters)
-            delete letters[item.first];
-    }
-};
-
-class Graph {
-  private:
-    int mask(int r, int c) {
-        int m = 1 << (r*4 + c);
-        return m;
-    }
-
-  public:
-
-    std::vector<std::vector<char> > board;
-
-    Graph(std::vector<std::vector<char> > _board) {
-        for (int r = 0; r < 4; r++) {
-            board.push_back(std::vector<char>());
-            for (char c : _board[r]) {
-                board[r].push_back(c);
-            };
-        }
-    }
-
-    std::vector<std::string> word_search(TrieNode* head) {
-        std::unordered_set<std::string> unique;
-        std::vector<std::string> answers;
-        std::stack<std::pair<int, TrieNode*> > search[4][4];
-
-        for (int r = 0; r < 4; r++) {
-            for (int c = 0; c < 4; c++) {
-                search[r][c].push({mask(r,c), head->get(board[r][c])});
-            }
-        }
-
-        bool empt = false;
-
-        while (!empt) {
-            empt = true;
-            for (int r = 0; r < 4; r++) for (int c = 0; c < 4; c++) {
-                while (!search[r][c].empty()) {
-                
-                    std::pair<int, TrieNode*> curr = search[r][c].top();
-                    search[r][c].pop();
-
-                    if (curr.second == NULL)
-                        continue;
-
-                    if (curr.second->end) {
-                        std::string ans = TrieNode::recreate(curr.second);
-                        if (!unique.count(ans)) {
-                            unique.insert(ans);
-                            answers.push_back(ans);
-                        }
-                    }
-
-                    for (int dx : {-1, 0, 1}) for (int dy : {-1, 0, 1}) {
-                        int nr = r+dy;
-                        int nc = c+dx;
-
-                        if (nr < 0 || nr >= 4 || nc < 0 || nc >= 4 || (mask(nr,nc) & curr.first))
-                            continue;
-
-                        search[nr][nc].push({curr.first | mask(nr,nc), curr.second->get(board[nr][nc])});
-                        empt = false;
-                    }
-                }
-            }
-        }
-
-        return answers;
-    }
-};
+#include "includes/WordGraph.hpp"
+#include "includes/TrieNode.hpp"
 
 // I don't know what the wordhunt score is for words longer than 9
 int calc_max_score(std::vector<std::string> words) {
@@ -150,11 +33,20 @@ int calc_max_score(std::vector<std::string> words) {
     return val;
 }
 
+int trie_size(TrieNode* n) {
+    if (!n)
+        return 0;
+    int sze = sizeof(*n);
+    for (auto const &l : n->letters)
+        sze += trie_size(l.second);
+    return sze;
+}
+
 TrieNode load_trie_dict(std::string file) {
     
     TrieNode head = TrieNode();
 
-    std::fstream myfile("scrabble_dict.txt");
+    std::fstream myfile(file);
  
     if (!myfile.is_open())
         exit(1);
@@ -166,6 +58,7 @@ TrieNode load_trie_dict(std::string file) {
         TrieNode::add_word(&head, mystr);
         mystr = "";
     }
+    // std::cout << "Size of trie: " << trie_size(&head) << " bytes" << std::endl;
 
     return head;
 }
@@ -173,7 +66,7 @@ TrieNode load_trie_dict(std::string file) {
 int main() {
     // Load dictionary
     auto start = std::chrono::high_resolution_clock::now();
-    TrieNode head = load_trie_dict("scrabble_dict.txt");
+    TrieNode head = load_trie_dict("resources/scrabble_dict.txt");
     auto dict_end = std::chrono::high_resolution_clock::now();
 
     // Set up board
@@ -201,7 +94,7 @@ int main() {
     auto calc_start = std::chrono::high_resolution_clock::now();
 
     // Set up graph representation of board
-    Graph g(board);
+    WordGraph g(board);
 
     // Calculate answers and sort them by length
     std::vector<std::string> answers = g.word_search(&head);
