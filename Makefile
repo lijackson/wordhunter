@@ -1,4 +1,4 @@
-_DEPS = wordhunter TrieNode WordGraph
+_DEPS = freq_analysis TrieNode WordGraph BoardIO
 
 CC = g++
 
@@ -10,15 +10,15 @@ IDIR = includes
 
 DEPS = $(patsubst %,$(IDIR)/%.hpp,$(_DEPS))
 
-SRC = Client.cpp
+SRC = wordhunter.cpp
 
-_OBJ = Client
+_OBJ = wordhunter
 OBJ = $(patsubst %,$(ODIR)/%.o,$(_DEPS))
 
 $(ODIR)/%.o: %.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-solver : $(OBJ)
+analysis : $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean

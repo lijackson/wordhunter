@@ -1,5 +1,35 @@
 #include "includes/TrieNode.hpp"
 
+int TrieNode::trie_size(TrieNode* n) {
+    if (!n)
+        return 0;
+    int sze = sizeof(*n);
+    for (auto const &l : n->letters)
+        sze += TrieNode::trie_size(l.second);
+    return sze;
+}
+
+TrieNode TrieNode::load_trie_dict(std::string file) {
+    
+    TrieNode head = TrieNode();
+
+    std::fstream myfile(file);
+ 
+    if (!myfile.is_open())
+        exit(1);
+    
+    std::string mystr = "";
+
+    while (myfile.good()) {
+        myfile >> mystr;
+        TrieNode::add_word(&head, mystr);
+        mystr = "";
+    }
+    // std::cout << "Size of trie: " << trie_size(&head) << " bytes" << std::endl;
+
+    return head;
+}
+
 void TrieNode::add_word(TrieNode* head, std::string word) {
     for (char c : word) {
         if (!head->letters.count(c))
