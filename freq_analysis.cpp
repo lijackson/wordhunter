@@ -29,7 +29,7 @@ int main() {
         std::cout << b << " | best score : " << calc_max_score(answers) << std::endl;
     }
 
-    int longest_pattern = 3;
+    int longest_pattern = 1;
     std::unordered_map<std::string, int> freq_dict;
     for (std::string w : all_answers) {
         int word_score = score_word(w);
@@ -47,6 +47,15 @@ int main() {
         }
     }
 
+    std::sort(all_answers.begin(), all_answers.end(), [] (const std::string& a, const std::string& b) {
+        return a.size() < b.size();
+    });
+
+
+    for (std::string s : all_answers)
+        if (s.size() >= 3)
+            std::cout << s << std::endl;
+
     std::vector<std::string> pattern_list;
 
     for (const auto &b : freq_dict) {
@@ -57,6 +66,6 @@ int main() {
         return freq_dict[a] < freq_dict[b];
     });
     
-    for (std::string w : pattern_list)
-        std::cout << w << ": " << freq_dict[w] << std::endl;
+    // for (std::string w : pattern_list)
+    //     std::cout << w << ": " << freq_dict[w] << std::endl;
 }

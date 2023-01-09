@@ -63,7 +63,7 @@ std::vector<std::string> WordGraph::word_search(TrieNode* head) {
     return answers;
 }
 
-// I don't know what the wordhunt score is for words longer than 9
+// I don't know what the wordhunt score is for words longer than 11, presumably 400 every letter though?
 int score_word(std::string w) {
     std::unordered_map<int, int> value = {
         {3, 100},
@@ -73,6 +73,8 @@ int score_word(std::string w) {
         {7, 1800},
         {8, 2200},
         {9, 2600},
+        {10, 3000},
+        {11, 3400},
     };
     // if (w.size() > 9)
     //     std::cout << "Extra big word found: " << w << std::endl;
