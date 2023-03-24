@@ -51,10 +51,10 @@ int main() {
         return a.size() < b.size();
     });
 
-
+    int all_points = 0;
     for (std::string s : all_answers)
         if (s.size() >= 3)
-            std::cout << s << std::endl;
+            all_points += score_word(s);
 
     std::vector<std::string> pattern_list;
 
@@ -65,6 +65,9 @@ int main() {
     std::sort(pattern_list.begin(), pattern_list.end(), [&freq_dict] (const std::string& a, const std::string& b) {
         return freq_dict[a] < freq_dict[b];
     });
+
+    std::cout << "Average words per board:" << (double) all_answers.size() / boards.size() << std::endl;
+    std::cout << "Average score per board:" << (double) all_points / boards.size() << std::endl;
     
     // for (std::string w : pattern_list)
     //     std::cout << w << ": " << freq_dict[w] << std::endl;
