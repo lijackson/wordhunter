@@ -18,6 +18,11 @@ ANALYSIS_OBJS = $(patsubst %, $(ODIR)/%.o, $(_ANALYSIS_OBJS))
 analysis: $(ANALYSIS_OBJS)
 	$(CC) $(FLAGS) -o analysis $(ANALYSIS_OBJS)
 
+_BOGGLER_OBJS = boggle_analysis Boggler WordGraph TrieNode BoardIO
+BOGGLER_OBJS = $(patsubst %, $(ODIR)/%.o, $(_BOGGLER_OBJS))
+boggler: $(BOGGLER_OBJS)
+	$(CC) $(FLAGS) -o boggler $(BOGGLER_OBJS)
+
 .PHONY:
 	clean
 

@@ -5,13 +5,13 @@ int WordGraph::mask(int r, int c) {
     return m;
 }
 
-WordGraph::WordGraph(std::vector<std::vector<char> > _board) {
+WordGraph::WordGraph(std::vector<std::vector<char> > _board, bool _q_is_qu) {
     for (int r = 0; r < 4; r++) {
         board.push_back(std::vector<char>());
-        for (char c : _board[r]) {
+        for (char c : _board[r])
             board[r].push_back(c);
-        };
     }
+    q_is_qu = _q_is_qu;
 }
 
 std::vector<std::string> WordGraph::word_search(TrieNode* head) {
@@ -21,7 +21,7 @@ std::vector<std::string> WordGraph::word_search(TrieNode* head) {
 
     for (int r = 0; r < 4; r++) {
         for (int c = 0; c < 4; c++) {
-            search[r][c].push({mask(r,c), head->get(board[r][c])});
+            search[r][c].push({mask(r, c), head->get(board[r][c])});
         }
     }
 
@@ -31,7 +31,6 @@ std::vector<std::string> WordGraph::word_search(TrieNode* head) {
         empt = true;
         for (int r = 0; r < 4; r++) for (int c = 0; c < 4; c++) {
             while (!search[r][c].empty()) {
-            
                 std::pair<int, TrieNode*> curr = search[r][c].top();
                 search[r][c].pop();
 
@@ -50,10 +49,10 @@ std::vector<std::string> WordGraph::word_search(TrieNode* head) {
                     int nr = r+dy;
                     int nc = c+dx;
 
-                    if (nr < 0 || nr >= 4 || nc < 0 || nc >= 4 || (mask(nr,nc) & curr.first))
+                    if (nr < 0 || nr >= 4 || nc < 0 || nc >= 4 || (mask(nr, nc) & curr.first))
                         continue;
 
-                    search[nr][nc].push({curr.first | mask(nr,nc), curr.second->get(board[nr][nc])});
+                    search[nr][nc].push({curr.first | mask(nr, nc), curr.second->get(board[nr][nc])});
                     empt = false;
                 }
             }
@@ -87,6 +86,6 @@ int calc_max_score(std::vector<std::string> words) {
 
     for (std::string w : words)
         val += score_word(w);
-    
+
     return val;
 }

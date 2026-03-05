@@ -1,13 +1,13 @@
 #include "includes/freq_analysis.hpp"
 
 int main() {
-    TrieNode head = TrieNode::load_trie_dict("resources/scrabble_dict.txt");
+    TrieNode head = TrieNode::load_trie_dict("resources/CSW22.txt");
 
     std::fstream myfile("resources/boards.txt");
- 
+
     if (!myfile.is_open())
         exit(1);
-    
+
     std::vector<std::string> boards;
     while (myfile.good()) {
         std::string mystr = "";

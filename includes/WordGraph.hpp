@@ -5,17 +5,17 @@
 #include <stack>
 #include <iostream>
 
-#include "TrieNode.hpp"
+#include "./TrieNode.hpp"
 
 class WordGraph {
-  private:
+ private:
     int mask(int r, int c);
 
-  public:
-
+ public:
+    bool q_is_qu;
     std::vector<std::vector<char> > board;
 
-    WordGraph(std::vector<std::vector<char> > _board);
+    WordGraph(std::vector<std::vector<char> > _board, bool q_is_qu);
 
     std::vector<std::string> word_search(TrieNode* head);
 };

@@ -32,7 +32,7 @@ int main() {
     auto calc_start = std::chrono::high_resolution_clock::now();
 
     // Set up graph representation of board
-    WordGraph g(board);
+    WordGraph g(board, false);
 
     // Calculate answers and sort them by length
     std::vector<std::string> answers = g.word_search(&head);
