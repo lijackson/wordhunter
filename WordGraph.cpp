@@ -16,7 +16,6 @@ WordGraph::WordGraph(std::vector<std::vector<char> > _board, bool _q_is_qu) {
 
 std::vector<std::string> WordGraph::word_search(TrieNode* head) {
     std::unordered_set<std::string> unique;
-    std::vector<std::string> answers;
     std::stack<std::pair<int, TrieNode*> > search[4][4];
 
     for (int r = 0; r < 4; r++) {
@@ -39,10 +38,7 @@ std::vector<std::string> WordGraph::word_search(TrieNode* head) {
 
                 if (curr.second->end) {
                     std::string ans = TrieNode::recreate(curr.second);
-                    if (!unique.count(ans)) {
-                        unique.insert(ans);
-                        answers.push_back(ans);
-                    }
+                    unique.insert(ans);
                 }
 
                 for (int dx : {-1, 0, 1}) for (int dy : {-1, 0, 1}) {
@@ -59,7 +55,7 @@ std::vector<std::string> WordGraph::word_search(TrieNode* head) {
         }
     }
 
-    return answers;
+    return std::vector<std::string>(unique.begin(), unique.end());
 }
 
 // I don't know what the wordhunt score is for words longer than 11, presumably 400 every letter though?
