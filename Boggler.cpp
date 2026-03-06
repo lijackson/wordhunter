@@ -68,7 +68,7 @@ char Boggler::get_random_letter(int die_index) {
 }
 
 void Boggler::analysis() {
-    constexpr int NUM_BOARDS = 100000;
+    constexpr int NUM_BOARDS = 1000000;
     constexpr int PROGRESS_INTERVAL = 100000;
 
     std::cout << "Starting Boggle Board Analysis..." << std::endl;
